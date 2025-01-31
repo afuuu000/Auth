@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const db = require('../config/db'); // Adjust the path to your db instance
+const db = require('../config/db');
 
 const User = db.define('User', {
   name: {
@@ -17,12 +17,13 @@ const User = db.define('User', {
   },
   role: {
     type: DataTypes.ENUM('SuperAdmin', 'Admin', 'User'),
-    defaultValue: 'User', // Default value
+    defaultValue: 'User',
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+
 });
 
 module.exports = User;

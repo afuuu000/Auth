@@ -1,27 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { verifyEmail } from "../services/api";
 
 const VerifyPage = () => {
   const { token } = useParams();
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("Verifying...");
 
   useEffect(() => {
     const verify = async () => {
       try {
         const response = await verifyEmail(token);
-        setMessage(response.data.message); // Display successful verification message
+        setMessage(response.data.message);
+
+        // Redirect to login page if verification is successful
+        if (response.data.redirect) {
+          setTimeout(() => navigate(response.data.redirect), 3000);
+        }
       } catch (err) {
-        setMessage(err.response?.data?.error || "Something went wrong!"); // Error handling
+        setMessage("Verification failed. Try again.");
       }
     };
+
     verify();
-  }, [token]);
+  }, [token, navigate]);
 
   return (
-    <div>
-      <h2>Email Verification</h2>
-      <p>{message}</p>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h2 className="text-2xl font-bold">Email Verification</h2>
+      <p className="text-gray-700">{message}</p>
     </div>
   );
 };
